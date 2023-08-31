@@ -14,7 +14,8 @@ import java.util.List;
  */
 public class App {
     public static void main( String[] args ) {
-        Configuration configuration = new Configuration().addAnnotatedClass(Person.class).addAnnotatedClass(Item.class);
+        Configuration configuration = new Configuration().addAnnotatedClass(Person.class)
+            .addAnnotatedClass(Item.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.getCurrentSession();
@@ -22,11 +23,11 @@ public class App {
         try {
             session.beginTransaction();
 
-//            Receive items from a person with id=3
-            Person person = session.get(Person.class, 3);
+//          Get the owner of the element with id = 5
+            Item item = session.get(Item.class, 5);
+            System.out.println(item);
+            Person person = item.getOwner();
             System.out.println(person);
-            List<Item> items = person.getItems();
-            System.out.println(items);
 
             session.getTransaction().commit();
         } finally {
