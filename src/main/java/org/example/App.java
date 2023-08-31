@@ -25,14 +25,14 @@ public class App {
         try {
             session.beginTransaction();
 
-//          Add new Person and new item to the database
-            Person person = new Person("Test person", 30);
-            Item newItem = new Item("Item2 from Hibernate", person);
-//          for hibernate cash
-            person.setItems(new ArrayList<>(Collections.singletonList(newItem)));
-//          makes SQL request
-            session.save(person);
-            session.save(newItem);
+//          Remove person2 items from the database
+            Person person = session.get(Person.class, 2);
+            List<Item> items = person.getItems();
+            // makes a SQL query
+            for (Item item: items)
+                session.remove(item);
+            // does not make SQL query, but it is necessary for correct hibernate cash state
+            person.getItems().clear();
 
             session.getTransaction().commit();
         } finally {
