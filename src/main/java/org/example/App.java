@@ -25,12 +25,14 @@ public class App {
         try {
             session.beginTransaction();
 
-//          Remove person with id=3 from the database
-            Person person = session.get(Person.class, 3);
-            // makes a SQL query
-            session.remove(person);
-            // does not make SQL query, but it is necessary for correct Hibernate cash state
-            person.getItems().forEach(item -> item.setOwner(null));
+//          Change the owner of an item in the database
+            Person person = session.get(Person.class, 2);
+            Item item = session.get(Item.class, 2);
+            // for Hibernate cash
+            item.getOwner().getItems().remove(item);
+            // SQL
+            item.setOwner(person);
+            person.getItems().add(item);
 
             session.getTransaction().commit();
         } finally {
